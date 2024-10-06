@@ -86,6 +86,7 @@ The attack led to impaired system functionality, although no confirmed data exfi
 
 ## 5. MITRE ATT&CK Framework Analysis
 The attack phases mapped to the MITRE ATT&CK framework:
+![116d5b8a-a0e0-406d-88e3-56f94a0db954](https://github.com/user-attachments/assets/33436ff1-a204-4ba3-b2d6-c11d9a8201f3)
 
 1. **Initial Access** (TA0001):  
    - **Phishing** (T1566) - A phishing email was used for gaining initial access.
