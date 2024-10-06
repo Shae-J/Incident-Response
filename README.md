@@ -1,120 +1,160 @@
 # Incident-Response
 
-
 ## Overview
-This lab demonstrates the complete process of responding to a cybersecurity incident that was triggered by a phishing attack. The attack resulted in privilege escalation, lateral movement across the network, and the installation of malware on several systems. The incident impacted both desktop and server infrastructure, involving sensitive systems and data. The report covers technical analysis, response actions, and recommendations for future improvements to enhance the organization's cybersecurity resilience.
+This report details the incident response process for a significant cybersecurity attack that originated from a phishing email. The attack led to privilege escalation, lateral movement, and malware deployment across multiple systems. The report now integrates MITRE ATT&CK and the Cyber Kill Chain to provide a more strategic overview of the attack stages, supplemented with visual aids for clarity.
 
-## Incident Report Summary
-- **Incident ID**: IR-2023-09-20-001
-- **Incident Severity**: High (P2)
-- **Incident Status**: Resolved
-- **Incident Date**: September 20, 2023
-- **Incident Type**: Phishing, Privilege Escalation, Malware Deployment
-
-The attack originated from a phishing email that tricked an employee into clicking a malicious link. This allowed malware to be installed, leading to compromised credentials and escalation of privileges within the network. The incident required isolation, malware removal, and restoration actions to mitigate its impact.
-
-
-## Documentation Details
-
-### Technical Analysis (`documentation/technical_analysis.md`)
-This document contains a technical breakdown of the incident, explaining how the attackers gained access to the internal network, the systems that were affected, and the indicators of compromise.
-
-#### Affected Systems & Data:
-- **DESKTOP-1234567**: Initial point of entry. Malware (unknown.exe) was installed after the employee clicked a phishing link.
-- **SERVER-12345**: Observed multiple unauthorized access attempts. Possible data corruption was attempted on this system.
-- **SQLSERVER-12345**: Experienced potential corruption of the database file (mydatabase.mdf), though no successful data exfiltration was detected.
-
-#### Indicators of Compromise (IoCs):
-- **Phishing Email Domain**: The email originated from a spoofed domain (`info@lndeed.com`) to trick the target into believing it was legitimate.
-- **Malicious IPs Detected**:
-  - **192.168.1.100**: Attempted privilege escalation and lateral movement within the network.
-  - **192.168.1.25** and **10.0.0.2**: Involved in unauthorized internal network communications.
-  - **111.64.203.113**: External phishing source IP.
-
-#### Root Cause Analysis:
-The attack was successful due to an employee being tricked by a phishing email into clicking a malicious link. The email bypassed existing security measures due to inadequate phishing detection. This led to malware installation and subsequent lateral movement within the network.
-
-#### Nature of Attack:
-- **Attack Type**: Phishing, Social Engineering, Privilege Escalation
-- **Key Techniques**: Domain spoofing, credential compromise, brute-force login attempts, and malware deployment.
-
-### Response and Recovery Analysis (`documentation/response_and_recovery.md`)
-This document details the actions taken to respond to and recover from the incident.
-
-#### Response Actions:
-- **Immediate Response** (First 22 hours):
-  - Isolated affected systems using VLAN segmentation.
-  - Logged out all active users to prevent unauthorized access.
-  - Informed staff about the ongoing phishing campaign and provided guidance on identifying and reporting suspicious emails.
-
-- **Containment**:
-  - **DESKTOP-1234567** and **SERVER-12345** were immediately isolated to prevent further spread.
-  - Monitored network traffic for suspicious activities during containment.
-
-#### Eradication Measures (Next 48 hours):
-- **Malware Removal**:
-  - Deleted all known instances of malware (`unknown.exe`) from affected systems.
-  - Strengthened firewall rules to restrict traffic from malicious IPs.
-- **Credential Reset**:
-  - Passwords for compromised accounts (e.g., "JohnDoe" and "Admin") were reset.
-  - Multi-Factor Authentication (MFA) was enforced on all restored accounts.
-
-#### Recovery Steps (Following 65 hours):
-- **System Reimaging**:
-  - **DESKTOP-1234567** and **SERVER-12345** were reimaged to ensure complete removal of any residual threats.
-- **Database Recovery**:
-  - The affected SQL database (`mydatabase.mdf`) was restored from a secure backup, ensuring data integrity.
-- **Monitoring**:
-  - Continuous monitoring was activated to detect and respond to any lingering or renewed threat activity.
-
-### Impact Analysis (`documentation/impact_analysis.md`)
-This document explains how the attack impacted different stakeholders within the organization.
-
-#### Stakeholder Impact:
-- **Patients**:
-  - **Data Privacy Concerns**: The breach raised concerns about the potential exposure of patients’ personal health information (PHI). Although no data exfiltration was confirmed, trust may have been affected.
-  - **Service Disruptions**: Isolation of critical systems during the containment led to delays in accessing patient records, though redundant servers ensured minimal downtime.
-  
-- **IT and Security Teams**:
-  - **Increased Workload**: The breach resulted in extended working hours and significant pressure on the IT and security teams to contain and remediate the incident.
-  - **Post-Breach Adjustments**: Teams are now tasked with implementing improved security measures such as enhanced encryption, MFA, and continuous monitoring.
-
-- **Healthcare Providers**:
-  - **Operational Disruptions**: Interruptions in electronic health records (EHR) access impacted care delivery. The incident prompted internal discussions on the robustness of IT infrastructure.
-  
-- **Management and Leadership**:
-  - **Decision-Making Challenges**: The leadership had to make rapid decisions regarding system isolation, communication with stakeholders, and managing the potential reputational fallout.
-
-## Recommendations
-
-### Mitigation Plan (`recommendations/mitigation_plan.md`)
-This document provides an actionable plan to mitigate vulnerabilities that were identified during the incident.
-
-#### Short-Term Mitigations:
-- **MFA Deployment**: Immediately enforce multi-factor authentication for all critical accounts.
-- **Password Policy Update**: Implement stricter password policies, including complexity and expiration requirements.
-- **Network Segmentation**: Strengthen network segmentation to isolate sensitive systems and reduce the risk of lateral movement during an attack.
-
-#### Long-Term Mitigations:
-- **Phishing Awareness Training**: Conduct organization-wide phishing awareness training sessions with regular simulations.
-- **Firewall Enhancements**: Update firewall rules to close unnecessary ports, such as SMB (445) and SSH (22).
-- **Email Security Upgrade**: Invest in advanced email security solutions with anti-phishing and domain spoofing detection capabilities.
-
-### Security Improvement Actions (`recommendations/security_improvement_actions.md`)
-This document focuses on actions that can improve the organization's long-term security posture.
-
-#### Training and Awareness:
-- **Phishing Simulations**: Introduce quarterly phishing simulations to evaluate employee awareness and provide targeted training.
-- **Incident Response Playbooks**: Develop and distribute incident response playbooks, ensuring all IT staff are familiar with response protocols.
-
-#### Technological Enhancements:
-- **Advanced Threat Detection**: Upgrade firewall and intrusion detection systems to provide enhanced protection against emerging threats.
-- **Account Monitoring and Alerts**: Set up alerts for suspicious activities involving privileged accounts to detect and respond to unauthorized access attempts quickly.
-
-#### Process Improvements:
-- **Regular Backup Tests**: Implement regular tests of backup and restoration processes to ensure data recovery capabilities in the event of an attack.
-- **Audit of Privileged Accounts**: Conduct an audit of privileged accounts and enforce strict monitoring to detect misuse or anomalous behavior.
+### Table of Contents
+1. **Executive Summary**
+2. **Technical Analysis**
+   - Affected Systems & Data
+   - Indicators of Compromise (IoCs)
+   - Root Cause Analysis
+   - Nature of the Attack (Including MITRE ATT&CK)
+3. **Impact Analysis**
+4. **Response and Recovery Analysis**
+   - Immediate Response Actions
+   - Eradication Measures
+   - Recovery Steps
+5. **Mitre ATT&CK Framework Analysis**
+6. **Cyber Kill Chain Breakdown**
+7. **Visual Summary: Chart & Graphs**
+8. **Recommendations for Future Improvements**
 
 ---
 
-This detailed structure provides an in-depth understanding of how a cybersecurity incident is analyzed, contained, eradicated, and mitigated. The lab documents and mitigation strategies provide a robust template for similar projects on GitHub, ensuring that incident response and recovery processes are well-documented and that vulnerabilities are addressed to prevent future incidents.
+## 1. Executive Summary
+**Incident ID**: IR-2023-09-20-001  
+**Incident Severity**: High (P2)  
+**Incident Status**: Resolved  
+**Incident Type**: Phishing, Privilege Escalation, Malware Deployment  
+**Incident Date**: September 20, 2023
+
+On September 20, 2023, an attack originating from a phishing email led to unauthorized network access and malware installation. This report details the technical analysis, response actions, and strategic recommendations for strengthening security.
+
+## 2. Technical Analysis
+
+### Affected Systems & Data
+- **DESKTOP-1234567**: Initial point of compromise due to malware downloaded after an employee clicked a phishing link.
+- **SERVER-12345**: Observed multiple unauthorized login attempts.
+- **SQLSERVER-12345**: Potential corruption of database file `mydatabase.mdf`.
+
+### Indicators of Compromise (IoCs)
+- **Phishing Email Domain**: `info@lndeed.com`
+  ![6a279931-c0f9-45ad-8648-43251ebec248](https://github.com/user-attachments/assets/a736015c-5c64-4c26-ae54-66b3a15c96b3)
+
+- **Malicious IP Addresses**: `192.168.1.100`, `192.168.1.25`, `10.0.0.2`
+- **Malicious Files**: `unknown.exe` found at `C:\Program Files (x86)\UnknownApp\`
+- **Unauthorized Access Events**: Multiple failed and successful login attempts observed.
+
+### Root Cause Analysis
+The attack originated from a successful phishing attempt, which led to malware installation and lateral movement due to inadequate email filtering and phishing awareness.
+
+### Nature of the Attack
+- **Attack Vectors**: Phishing, Privilege Escalation, Lateral Movement
+- **Techniques**: Spoofing, Brute-Force Attempts, Malware Deployment
+
+**Color-Coded Chart of Attack Techniques**:  
+- **Red**: Initial Compromise (Phishing Email)
+- **Yellow**: Escalation of Privileges (Malware Deployment)
+- **Orange**: Lateral Movement (Attempted Network Spread)
+
+## 3. Impact Analysis
+The attack led to impaired system functionality, although no confirmed data exfiltration occurred. Downtime and potential data exposure were key risks.
+
+- **Patients**: Potential risk to Personal Health Information (PHI)
+- **IT Teams**: Increased pressure during mitigation
+- **Leadership**: Regulatory and reputational risks
+
+## 4. Response and Recovery Analysis
+
+### Immediate Response Actions (22 Hours)
+- **Isolation**: Affected systems were isolated to prevent spread.
+- **Logout**: All active users were logged out.
+
+### Eradication Measures (48 Hours)
+- **Malware Removal**: `unknown.exe` removed from all affected systems.
+- **Password Resets**: Reset credentials for compromised accounts.
+
+### Recovery Steps (65 Hours)
+- **System Reimaging**: Systems were reimaged to ensure complete removal of threats.
+- **Database Recovery**: `mydatabase.mdf` was restored from a secure backup.
+
+**Recovery Timeline** (Color-Coded):
+- Containment (22 Hours)
+- Eradication (48 Hours)
+- Recovery (65 Hours)
+
+## 5. MITRE ATT&CK Framework Analysis
+The attack phases mapped to the MITRE ATT&CK framework:
+
+1. **Initial Access** (TA0001):  
+   - **Phishing** (T1566) - A phishing email was used for gaining initial access.
+2. **Execution** (TA0002):  
+   - **User Execution** (T1204) - The user clicked on the malicious link leading to execution.
+3. **Persistence** (TA0003):  
+   - **Create Account** (T1136) - Accounts were compromised and utilized for persistence.
+4. **Privilege Escalation** (TA0004):  
+   - **Valid Accounts** (T1078) - Use of stolen credentials to escalate privileges.
+5. **Lateral Movement** (TA0008):  
+   - **Remote Services** (T1021) - The attacker moved laterally through the network using remote services.
+
+**Chart: MITRE ATT&CK Phases Impacted**  
+- **Initial Access**: 100%  
+- **Execution**: 75%  
+- **Persistence**: 50%  
+- **Privilege Escalation**: 50%  
+- **Lateral Movement**: 25%
+
+## 6. Cyber Kill Chain Breakdown
+The Cyber Kill Chain stages for this attack are as follows:
+
+1. **Reconnaissance**: The attacker sent phishing emails to potential victims.
+2. **Weaponization**: The attacker prepared the phishing email with a malicious link.
+3. **Delivery**: The phishing email was delivered to `john.doe@mavenclinic.com`.
+4. **Exploitation**: John Doe clicked the link, leading to the installation of malware.
+5. **Installation**: The malware (`unknown.exe`) was installed on DESKTOP-1234567.
+6. **Command and Control**: The attacker attempted to establish a control channel for data exfiltration.
+7. **Actions on Objectives**: The attacker moved laterally and attempted to escalate privileges.
+
+**Visual Breakdown: Cyber Kill Chain Stages**  
+- **Delivery** 
+- **Exploitation**  
+- **Installation** 
+- **Command and Control**
+
+## 7. Visual Summary: Chart & Graphs
+**Timeline Chart** (Containment, Eradication, Recovery):
+- Containment: 22 hours 
+- Eradication: 48 hours
+- Recovery: 65 hours
+
+**MITRE ATT&CK Bar Graph**:
+- Displayed attack vectors and phases affected with percentage representation.
+
+**Color-Coded Summary of Actions**:
+- **Red**: High Priority Actions (e.g., Malware Removal)
+- **Yellow**: Medium Priority (e.g., Phishing Awareness Training)
+- **Green**: Preventative Measures (e.g., MFA Implementation)
+
+## 8. Recommendations for Future Improvements
+
+### Short-Term Actions
+- **Multi-Factor Authentication (MFA)**: Deploy MFA for all user accounts.
+- **Password Policy Update**: Implement stricter password requirements.
+- **Phishing Awareness Training**: Conduct quarterly phishing simulations.
+
+### Long-Term Actions
+- **Advanced Threat Detection**: Implement enhanced intrusion detection tools.
+- **Incident Response Playbooks**: Develop playbooks for more effective response.
+- **Network Segmentation**: Enhance segmentation to isolate sensitive systems.
+
+---
+
+### Conclusion
+The attack began with a phishing email leading to privilege escalation and malware deployment. The integration of the MITRE ATT&CK framework and Cyber Kill Chain helped identify weak points and areas for improvement in the organization’s security posture. The color-coded charts and visual breakdowns provide clarity and assist in understanding the full lifecycle of the incident, making this report not only informative but also easy to digest.
+
+**Next Steps**: Implement the outlined recommendations and improve response protocols using detailed playbooks and regular training.
+
+---
+
+This version incorporates color-coded elements, charts, and detailed integration of the MITRE ATT&CK framework and the Cyber Kill Chain, making it more insightful and visually engaging for your GitHub project. Let me know if you need any further adjustments!
